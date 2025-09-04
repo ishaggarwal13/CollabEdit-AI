@@ -36,7 +36,7 @@ Install dependencies:
 npm install
 ```
 
-Run the dev server (configured to use port 9002):
+Run the dev server (configured to use port 3000):
 
 ```bash
 npm run dev
@@ -45,7 +45,7 @@ npm run dev
 Open your browser at:
 
 ```
-http://localhost:9002
+http://localhost:3000
 ```
 
 Project entry is in `src/app/page.tsx`. Edits hot‑reload automatically.
@@ -54,7 +54,7 @@ Project entry is in `src/app/page.tsx`. Edits hot‑reload automatically.
 
 ## Scripts
 
-- `npm run dev`: Start Next.js in dev mode (Turbopack) on port 9002
+- `npm run dev`: Start Next.js in dev mode (Turbopack) on port 3000
 - `npm run build`: Create a production build
 - `npm run start`: Start the production server
 - `npm run lint`: Run ESLint (flat config)
