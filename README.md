@@ -133,34 +133,6 @@ Set any required env vars in Vercel before deploying.
 
 ---
 
-## Project Structure
-
-```
-.
-├─ public/                 # Static assets (SVGs, images)
-├─ src/
-│  └─ app/                # App Router pages, layout, styles
-│     ├─ layout.tsx
-│     ├─ page.tsx         # Home / dashboard shell
-│     └─ globals.css      # Tailwind base styles
-├─ eslint.config.mjs
-├─ next.config.ts
-├─ postcss.config.mjs
-├─ tsconfig.json
-└─ README.md
-```
-
----
-
-## Roadmap Ideas
-
-- Plug‑in widget system (stocks, crypto, indices, news)
-- Real‑time updates via server actions or websockets
-- Persistent layouts per user
-- Data provider adapters and caching
-
----
-
 ## Contributing
 
 1. Fork the repo and create a feature branch
