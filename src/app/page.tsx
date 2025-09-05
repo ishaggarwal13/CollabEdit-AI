@@ -243,6 +243,8 @@ function HomePageContent() {
   const [isClient, setIsClient] = useState(false);
 
   const importFileRef = useRef<HTMLInputElement>(null);
+  const prevConfigsRef = useRef<Record<string, string>>({});
+  const intervalsRef = useRef<Record<string, number>>({});
   const { getProviderById } = useApiProviders();
   const { toast } = useToast();
 
@@ -290,8 +292,9 @@ function HomePageContent() {
       let result: { data?: any; error?: string } = {};
 
       if (config.customApiEndpoint) {
-        result = await fetchData({ customUrl: config.customApiEndpoint });
-      } else {
+        // Custom endpoints are deprecated; ignore and use provider
+      }
+      {
         const provider = getProviderById(config.apiProvider);
         if (!provider) {
           setWidgetState((prev) => ({
@@ -380,19 +383,53 @@ function HomePageContent() {
   );
 
   useEffect(() => {
-    widgets.forEach((widget) => {
-      fetchWidgetData(widget);
-      const intervalSeconds = widget.config?.refreshInterval
-        ? parseInt(widget.config.refreshInterval, 10)
-        : 0;
-      if (intervalSeconds > 0) {
-        const intervalId = setInterval(
-          () => fetchWidgetData(widget),
-          intervalSeconds * 1000
-        );
-        return () => clearInterval(intervalId);
+    const currentIds = new Set(widgets.map((w) => w.id));
+
+    // Clear intervals for removed widgets
+    Object.keys(intervalsRef.current).forEach((id) => {
+      if (!currentIds.has(id)) {
+        clearInterval(intervalsRef.current[id]);
+        delete intervalsRef.current[id];
+        delete prevConfigsRef.current[id];
       }
     });
+
+    // For each widget, refetch only if config changed (or widget is new)
+    widgets.forEach((widget) => {
+      const serialized = JSON.stringify(widget.config || {});
+      const prev = prevConfigsRef.current[widget.id];
+      const hasConfigChanged = prev !== serialized;
+
+      if (hasConfigChanged) {
+        fetchWidgetData(widget);
+        prevConfigsRef.current[widget.id] = serialized;
+
+        // Reset interval when config changes
+        if (intervalsRef.current[widget.id]) {
+          clearInterval(intervalsRef.current[widget.id]);
+          delete intervalsRef.current[widget.id];
+        }
+        const intervalSeconds = widget.config?.refreshInterval
+          ? parseInt(widget.config.refreshInterval, 10)
+          : 0;
+        if (intervalSeconds > 0) {
+          intervalsRef.current[widget.id] = window.setInterval(
+            () => fetchWidgetData(widget),
+            intervalSeconds * 1000
+          );
+        }
+      }
+    });
+
+    return () => {
+      // Cleanup on unmount
+      if (!widgets || widgets.length === 0) {
+        Object.keys(intervalsRef.current).forEach((id) => {
+          clearInterval(intervalsRef.current[id]);
+          delete intervalsRef.current[id];
+        });
+      }
+    };
   }, [widgets, fetchWidgetData]);
 
   const removeWidget = (id: string) => {
@@ -408,13 +445,15 @@ function HomePageContent() {
     };
     setWidgets([...widgets, newWidget]);
     setAddWidgetDialogOpen(false);
+    // Trigger fetch and interval setup immediately for the new widget
+    fetchWidgetData(newWidget);
   };
 
   const handleUpdateWidget = (updatedWidget: Widget) => {
     setWidgets(
       widgets.map((w) => (w.id === updatedWidget.id ? updatedWidget : w))
     );
-    fetchWidgetData(updatedWidget);
+    // Fetch will be triggered by the configs-diff effect
     setConfiguringWidget(null);
   };
 
@@ -591,6 +630,20 @@ function HomePageContent() {
                 </p>
               </CardHeader>
               <CardContent className="p-0">
+                <div className="mb-6 flex flex-col items-center gap-3 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    To add a new API provider or set API keys for existing
+                    providers, go to
+                    <span className="font-semibold"> API Configuration</span>.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setApiConfigDialogOpen(true)}
+                  >
+                    Open API Configuration
+                  </Button>
+                </div>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <Card className="flex flex-col items-center justify-center p-8 text-center transition-all hover:shadow-lg">
                     <CardHeader className="p-0 items-center mb-8">
