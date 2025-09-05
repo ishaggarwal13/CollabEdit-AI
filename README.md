@@ -1,25 +1,42 @@
-## FinDash
+# CollabEdit AI: Collaborative Editor with AI Assistant
 
-A customizable finance dashboard built with Next.js. It provides a foundation for real‑time market tracking via interactive widgets, charts, theming, and a modern UI.
+Welcome to CollabEdit AI, a modern, feature-rich collaborative editor supercharged with artificial intelligence. This document provides an overview of the application, its features, the technology stack it's built on, and how it all comes together.
 
-### Features
+## How It Works
 
-- Interactive dashboard layout with drag‑and‑drop and resizing (via `react-grid-layout`)
-- Data visualization with `chart.js` and `react-chartjs-2`
-- Light/Dark theme support via `next-themes`
-- Utility‑first styling with Tailwind CSS + `tailwindcss-animate`
-- Form validation with `react-hook-form` and `zod`
-- Rich, accessible UI primitives powered by Radix UI
-- Type‑safe codebase with TypeScript and strict settings
+CollabEdit AI provides a seamless writing and editing experience. The core of the application is a rich-text editor where users can write and format documents. The real power comes from the integrated AI Assistant, which can be accessed through a chat sidebar or a floating toolbar that appears when text is selected.
 
-### Tech Stack
+To get started, the user provides their API key for an AI provider (like Gemini or OpenAI) through a simple interface in the application header. This key is stored securely in the browser's local storage and is used to communicate with the AI model.
 
-- Next.js `15.3.3` (App Router)
-- React `18.3`
-- TypeScript `^5`
-- Tailwind CSS `^3.4`
-- Chart.js `^4`
-- Radix UI, Lucide Icons
+Users can interact with the AI in various ways:
+
+- **Chat-based Editing:** Ask the AI to write, rewrite, or brainstorm ideas directly within the chat panel. The AI can respond with suggestions or directly modify the content in the editor.
+- **Text Transformations:** Select text in the editor to bring up a floating toolbar. From there, you can ask the AI to perform quick actions like shortening or lengthening the text, or converting it into a markdown table. A preview modal shows the suggested changes before they are applied.
+- **Content Generation:** Use the "Agent" tab to give the AI more complex tasks, like creating a complete PowerPoint presentation from a simple query.
+- **Web Summarization:** Use the "Search" tab to have the AI search the web for a topic and provide a concise summary, which is then inserted into the editor.
+
+## Key Features
+
+- **Rich-Text Editor:** A powerful and intuitive editor based on Tiptap that supports various text formatting options, including tables.
+- **AI-Powered Chat:** A sidebar chat allows for conversational interaction with the AI to refine and generate document content.
+- **Floating Toolbar:** A contextual menu appears on text selection, offering quick AI-driven transformations like "shorten," "lengthen," and "convert to table."
+- **AI Edit Preview:** Before applying any AI suggestions, a preview modal shows a clear "Original vs. AI Suggestion" comparison.
+- **Multi-Platform AI Support:** Easily switch between different AI model providers (e.g., Google Gemini, OpenAI) and manage API keys directly in the UI.
+- **Agent Tasking:** Delegate complex tasks, such as creating presentations based on a query.
+- **Web Search & Summarization:** The AI can search the web and generate summaries of the findings, inserting them directly into your document.
+- **Responsive Design:** A clean, modern interface that works seamlessly across different screen sizes.
+
+## Technology Stack
+
+This application is built with a modern, powerful tech stack:
+
+- **Framework:** [Next.js](https://nextjs.org/) (using the App Router)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **AI Integration:** [Genkit](https://firebase.google.com/docs/genkit), a Google-developed framework for building production-ready AI-powered features.
+- **UI Components:** [ShadCN UI](https://ui.shadcn.com/) - A collection of beautifully designed, accessible, and customizable React components.
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Editor:** [Tiptap](https://tiptap.dev/) - A headless, framework-agnostic rich-text editor.
+- **Icons:** [Lucide React](https://lucide.dev/)
 
 ---
 
@@ -91,8 +108,8 @@ Create a `.env.local` at the project root for any runtime config:
 
 ```
 # Example (remove if unused)
-NEXT_PUBLIC_API_BASE_URL="https://api.example.com"
-FIN_API_KEY="your_secret_key"
+OPENAI_API_KEY=__YOUR_OPENAI_API_KEY__
+GEMINI_API_KEY=__YOUR_GEMINI_API_KEY__
 ```
 
 - Variables prefixed with `NEXT_PUBLIC_` are exposed to the client.
