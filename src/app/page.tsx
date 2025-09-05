@@ -411,7 +411,7 @@ function HomePageContent() {
         }
         const intervalSeconds = widget.config?.refreshInterval
           ? parseInt(widget.config.refreshInterval, 10)
-          : 0;
+          : 60;
         if (intervalSeconds > 0) {
           intervalsRef.current[widget.id] = window.setInterval(
             () => fetchWidgetData(widget),
